@@ -22,10 +22,10 @@ prior_factor = torch.from_numpy(np.load("data/prior_factor.npy")).to(device)
 weights = prior_factor.unsqueeze(0).unsqueeze(-1).unsqueeze(-1)
 
 # Hyperparameters
-epochs = 50
-lr = 1e-4
-train_num_max = 200
-val_num_max = 20
+epochs = 100
+lr = 5e-4
+train_num_max = 2000
+val_num_max = 200
 pretrained = None
 save_dir = "exp_Zhang_Cla_Lab"
 

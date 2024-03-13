@@ -17,5 +17,7 @@ wandb.login(key=wandb_api)
 !git clone https://github.com/duongngockhanh/vgg-clas-colorization.git
 ```
 ```
+%cd vgg-clas-colorization
 !python /kaggle/working/vgg-clas-colorization/train.py
+%cd..
 ```

@@ -6,7 +6,7 @@ import sklearn.neighbors as nn
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-from config import batch_size, img_rows, img_cols, nb_neighbors
+from config import img_rows, img_cols, nb_neighbors, q_ab
 
 
 def get_soft_encoding(image_ab, nn_finder, nb_q):
@@ -35,7 +35,6 @@ class ColorDataset(Dataset):
         self.file_list = sorted(os.listdir(self.data_root))
 
         # Load the array of quantized ab value
-        q_ab = np.load("data/pts_in_hull.npy")
         self.nb_q = q_ab.shape[0]
         # Fit a NN to q_ab
         self.nn_finder = nn.NearestNeighbors(n_neighbors=nb_neighbors, algorithm='ball_tree').fit(q_ab)

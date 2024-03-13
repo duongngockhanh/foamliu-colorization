@@ -2,14 +2,49 @@ import os
 import time
 
 import wandb
+import numpy as np
+import cv2
+from PIL import Image
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 
 from data_generator import create_dataloader
-from utils import categorical_crossentropy_color
+from utils import categorical_crossentropy_color, merge_lab
 from model import Zhang_Cla_Lab
 from config import device
+
+
+def show_image_wandb(val_loader, model, val_batch_size, device, epoch):
+    model.eval()
+    with torch.no_grad():
+        val_iter = iter(val_loader)
+        l_inputs, ab_gts = next(val_iter)
+        l_inputs, ab_gts = l_inputs.to(device), ab_gts.to(device)
+        l_inputs *= 255
+        ab_preds = model(l_inputs)
+        img_preds = merge_lab(l_inputs, ab_preds)
+        img_gts = merge_lab(l_inputs, ab_gts)
+        
+        images_pred = []
+        images_gt = []
+
+        fixed_num_showed_image = 5
+        num_showed_image = val_batch_size if val_batch_size < fixed_num_showed_image else fixed_num_showed_image
+
+        for i in range(num_showed_image):
+            rgb_pred = cv2.cvtColor(img_preds[i], cv2.COLOR_LAB2RGB)
+            pil_pred = Image.fromarray(rgb_pred)
+            image_pred = wandb.Image(pil_pred, caption=f"epoch {epoch}")
+            images_pred.append(image_pred)
+
+            rgb_gt = cv2.cvtColor(img_gts[i], cv2.COLOR_LAB2RGB)
+            pil_gt = Image.fromarray(rgb_gt)
+            image_gt = wandb.Image(pil_gt, caption=f"epoch {epoch}")
+            images_gt.append(image_gt)
+    
+    return images_pred, images_gt
+
 
 def evaluate(model, dataloader, criterion, device, val_batch_size, val_num_max):
     model.eval()
@@ -72,9 +107,9 @@ def fit(model, train_loader, val_loader, saved_weight_path,
             best_val_loss = val_loss
 
         # Show image
-        # if use_wandb == True:
-        #     images_pred, images_gt = show_image_wandb(val_loader, model, val_batch_size, device, epoch)
-        #     wandb.log({"train_loss": train_loss, "val_loss": val_loss, "images_pred": images_pred, "images_gt": images_gt})
+        if use_wandb == True:
+            images_pred, images_gt = show_image_wandb(val_loader, model, val_batch_size, device, epoch)
+            wandb.log({"train_loss": train_loss, "val_loss": val_loss, "images_pred": images_pred, "images_gt": images_gt})
 
         print(f'EPOCH {epoch + 1}:\tTrain loss: {train_loss:.4f}\tVal loss: {val_loss:.4f}\tTime: {time.time() - start_time_epoch:.2f}s')
 
@@ -87,7 +122,7 @@ def fit(model, train_loader, val_loader, saved_weight_path,
 
 
 def main():
-    save_dir = "exp_Zhang_Cla_Lab"
+    save_dir = "exp_Zhang_Cla_Lab_test"
     train_batch_size = 32
     val_batch_size = 8
 
@@ -124,8 +159,8 @@ def main():
     print(f"Weights will be saved in {saved_weight_path}")
 
     # Use WanDB
-    use_wandb = False 
-    wandb_proj_name = "Zhang_Cla_Lab"
+    use_wandb = True 
+    wandb_proj_name = "Zhang_Cla_Lab_test"
     wandb_config = {
         "dataset": "coco-stuff",
         "model": "Zhang_Cla_Lab",

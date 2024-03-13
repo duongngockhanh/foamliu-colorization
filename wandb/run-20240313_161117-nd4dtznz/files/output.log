@@ -1,0 +1,16 @@
+/kaggle/working/foamliu-colorization/utils.py:39: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch_y_batch = torch.tensor(y_batch)
+Traceback (most recent call last):
+  File "/kaggle/working/foamliu-colorization/train.py", line 186, in <module>
+    main()
+  File "/kaggle/working/foamliu-colorization/train.py", line 177, in main
+    train_losses, val_losses = fit(
+  File "/kaggle/working/foamliu-colorization/train.py", line 111, in fit
+    images_pred, images_gt = show_image_wandb(val_loader, model, val_batch_size, device, epoch)
+  File "/kaggle/working/foamliu-colorization/train.py", line 36, in show_image_wandb
+    rgb_pred = cv2.cvtColor(img_preds[i], cv2.COLOR_LAB2RGB)
+cv2.error: OpenCV(4.9.0) /io/opencv/modules/imgproc/src/color.simd_helpers.hpp:92: error: (-2:Unspecified error) in function 'cv::impl::{anonymous}::CvtHelper<VScn, VDcn, VDepth, sizePolicy>::CvtHelper(cv::InputArray, cv::OutputArray, int) [with VScn = cv::impl::{anonymous}::Set<3>; VDcn = cv::impl::{anonymous}::Set<3, 4>; VDepth = cv::impl::{anonymous}::Set<0, 5>; cv::impl::{anonymous}::SizePolicy sizePolicy = cv::impl::<unnamed>::NONE; cv::InputArray = const cv::_InputArray&; cv::OutputArray = const cv::_OutputArray&]'
+> Invalid number of channels in input image:
+>     'VScn::contains(scn)'
+> where
+>     'scn' is 256

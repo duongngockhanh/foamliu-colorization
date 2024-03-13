@@ -10,8 +10,10 @@ patience = 50
 num_train_samples = 28280
 num_valid_samples = 5000
 num_classes = 313
-epsilon = 1e-6
+epsilon = 1e-8
 epsilon_sqr = epsilon ** 2
+
+q_ab = np.load("data/pts_in_hull.npy")
 
 mat = scipy.io.loadmat('human_colormap.mat')
 color_map = (mat['colormap'] * 256).astype(np.int32)

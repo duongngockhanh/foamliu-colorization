@@ -1,0 +1,62 @@
+{
+    "os": "Linux-5.15.133+-x86_64-with-glibc2.31",
+    "python": "3.10.13",
+    "heartbeatAt": "2024-03-13T16:15:54.236525",
+    "startedAt": "2024-03-13T16:15:53.907253",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/kaggle/working/foamliu-colorization/train.py",
+    "codePathLocal": "foamliu-colorization/train.py",
+    "codePath": "train.py",
+    "host": "0d15437f326d",
+    "username": "root",
+    "executable": "/opt/conda/bin/python3.10",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2000.148,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2000.148,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2000.148,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2000.148,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2000.148,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 8062.387607574463,
+            "used": 5519.2618980407715
+        }
+    },
+    "gpu": "Tesla P100-PCIE-16GB",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Tesla P100-PCIE-16GB",
+            "memory_total": 17179869184
+        }
+    ],
+    "memory": {
+        "total": 31.35755157470703
+    }
+}

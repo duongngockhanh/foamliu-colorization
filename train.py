@@ -99,7 +99,7 @@ def main():
 
     # Hyperparameters
     model = Zhang_Cla_Lab().to(device)
-    epochs = 2
+    epochs = 5
     lr = 5e-4
     criterion = categorical_crossentropy_color
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)

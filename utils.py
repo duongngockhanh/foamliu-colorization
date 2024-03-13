@@ -53,7 +53,7 @@ def merge_lab(l_tensor, ab_tensor):
     '''
     l_tensor: torch.Size([n, 1, 256, 256])
     ab_tensor: torch.Size([n, 3, 64, 64])
-    return: np.ndarray - (n, 3, 256, 256)
+    return: np.ndarray - (n, 256, 256, 3)
     '''
     ab_tensor = decode_soft_encoding_batch_ab(ab_tensor, q_ab, epsilon, T)
     ab_tensor_resized = F.interpolate(ab_tensor, size=(256, 256), mode='bilinear', align_corners=False)

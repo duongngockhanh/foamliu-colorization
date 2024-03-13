@@ -12,7 +12,12 @@ import torch.nn as nn
 from data_generator import create_dataloader
 from utils import categorical_crossentropy_color, merge_lab
 from model import Zhang_Cla_Lab
-from config import device
+from config import (train_root, val_root,
+                    device, epochs, lr, 
+                    train_batch_size, val_batch_size,
+                    train_num_max, val_num_max, 
+                    pretrained, saved_weight_path, 
+                    use_wandb, wandb_proj_name, wandb_config)
 
 
 def show_image_wandb(val_loader, model, val_batch_size, device, epoch):
@@ -122,57 +127,16 @@ def fit(model, train_loader, val_loader, saved_weight_path,
 
 
 def main():
-    save_dir = "exp_Zhang_Cla_Lab_test"
-    train_batch_size = 32
-    val_batch_size = 8
-
-    train_root = "/kaggle/input/aio-coco-stuff/train2017/train2017"
-    val_root = "/kaggle/input/aio-coco-stuff/val2017/val2017"
-
     train_loader = create_dataloader(train_root, batch_size=train_batch_size, shuffle=True)
     val_loader = create_dataloader(val_root, batch_size=val_batch_size, shuffle=False)
 
-    # Hyperparameters
     model = Zhang_Cla_Lab().to(device)
-    epochs = 5
-    lr = 5e-4
     criterion = categorical_crossentropy_color
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    train_num_max = 200
-    val_num_max = 20
-    pretrained = None
 
     if pretrained != None:
         print(f"Load model from {pretrained}")
         model.load_state_dict(torch.load(pretrained))
-
-    # Save weight
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
-    saved_weights = sorted(os.listdir(save_dir))
-    if len(saved_weights) == 0:
-        saved_weight_file = "exp01.pt"
-        saved_weight_path = os.path.join(save_dir, saved_weight_file)
-    else:
-        saved_weight_file = f"exp{int(saved_weights[-1][3:-3]) + 1:02d}.pt"
-        saved_weight_path = os.path.join(save_dir, saved_weight_file)
-    print(f"Weights will be saved in {saved_weight_path}")
-
-    # Use WanDB
-    use_wandb = True 
-    wandb_proj_name = "Zhang_Cla_Lab_test"
-    wandb_config = {
-        "dataset": "coco-stuff",
-        "model": "Zhang_Cla_Lab",
-        "epochs": epochs,
-        "lr": lr,
-        "criterion": "categorical_crossentropy",
-        "optimizer": "Adam",
-        "train_num_max": train_num_max,
-        "val_num_max": val_num_max,
-        "pretrained": pretrained,
-        "saved_weight_path": saved_weight_path
-    }
 
     train_losses, val_losses = fit(
         model, train_loader, val_loader, saved_weight_path,
@@ -181,6 +145,8 @@ def main():
         train_num_max, val_num_max,
         use_wandb, wandb_proj_name, wandb_config
     )
+
+    print(f"Weights will be saved in {saved_weight_path}")
 
 if __name__ == "__main__":
     main()

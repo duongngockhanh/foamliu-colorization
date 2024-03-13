@@ -1,7 +1,0 @@
-
-EPOCH 1:	Train loss: 5.7161	Val loss: 5.7319	Time: 16.09s
-EPOCH 2:	Train loss: 5.6660	Val loss: 5.7473	Time: 14.65s
-EPOCH 3:	Train loss: 5.6283	Val loss: 5.6027	Time: 14.60s
-EPOCH 4:	Train loss: 5.6280	Val loss: 5.6264	Time: 13.90s
-EPOCH 5:	Train loss: 5.6258	Val loss: 5.6354	Time: 13.84s
-Complete training in 73.071494s

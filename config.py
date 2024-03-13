@@ -23,7 +23,7 @@ weights = prior_factor.unsqueeze(0).unsqueeze(-1).unsqueeze(-1)
 
 # Hyperparameters
 epochs = 100
-lr = 5e-4
+lr = 1e-4
 train_num_max = 2000
 val_num_max = 200
 pretrained = None

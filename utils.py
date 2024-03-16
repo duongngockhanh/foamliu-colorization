@@ -52,13 +52,13 @@ def decode_soft_encoding_batch_ab(y_batch, q_ab, epsilon=1e-8, T=0.38):
 def merge_lab(l_tensor, ab_tensor):
     '''
     l_tensor: torch.Size([n, 1, 256, 256])
-    ab_tensor: torch.Size([n, 3, 64, 64])
+    ab_tensor: torch.Size([n, 313, 64, 64])
     return: np.ndarray - (n, 256, 256, 3)
     '''
-    ab_tensor = decode_soft_encoding_batch_ab(ab_tensor, q_ab, epsilon, T)
-    ab_tensor_resized = F.interpolate(ab_tensor, size=(256, 256), mode='bilinear', align_corners=False)
-    img_tensor = torch.cat([l_tensor, ab_tensor_resized], dim=1)
+    ab_tensor = decode_soft_encoding_batch_ab(ab_tensor, q_ab, epsilon, T)                                 # (n, 2, 64, 64)
+    ab_tensor_resized = F.interpolate(ab_tensor, size=(256, 256), mode='bilinear', align_corners=False)    # (n, 2, 256, 256)
+    img_tensor = torch.cat([l_tensor, ab_tensor_resized], dim=1)                                           # (n, 3, 256, 256)
     img_np = img_tensor.detach().cpu().numpy()
     img_np = np.clip(img_np, a_min=0, a_max=255)
-    img_np = img_np.astype(np.uint8).transpose(0, 2, 3, 1)
+    img_np = img_np.astype(np.uint8).transpose(0, 2, 3, 1)                                                 # (n, 256, 256, 3)
     return img_np

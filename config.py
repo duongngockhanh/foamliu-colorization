@@ -30,7 +30,7 @@ weights_2 = weights_2 / sum(prior_probs * weights_2)
 
 # Hyperparameters
 epochs = 100
-lr = 1e-4
+lr = 1e-3
 train_num_max = 60
 val_num_max = 60
 pretrained = None

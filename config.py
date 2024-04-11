@@ -30,12 +30,12 @@ weights_2 = weights_2 / sum(prior_probs * weights_2)
 
 # Hyperparameters
 epochs = 100
-lr = 5e-5
+lr = 1e-4
 train_num_max = 60
 val_num_max = 60
 pretrained = None
 save_dir = "exp_Zhang_Cla_Lab"
-loss_type = 1
+loss_type = 2
 
 train_root = "/kaggle/input/small-coco-stuff/small-coco-stuff/train2017/train2017"
 val_root = "/kaggle/input/small-coco-stuff/small-coco-stuff/train2017/train2017"

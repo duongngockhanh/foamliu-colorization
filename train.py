@@ -128,7 +128,7 @@ def fit(model, train_loader, val_loader, saved_weight_path,
 
 
 def main():
-    train_loader = create_dataloader(train_root, batch_size=train_batch_size, shuffle=True)
+    train_loader = create_dataloader(train_root, batch_size=train_batch_size, shuffle=False)
     val_loader = create_dataloader(val_root, batch_size=val_batch_size, shuffle=False)
 
     model = Zhang_Cla_Lab().to(device)

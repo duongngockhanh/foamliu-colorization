@@ -12,6 +12,9 @@ epsilon_sqr = epsilon ** 2
 nb_neighbors = 5
 T = 0.38 # temperature parameter T
 
+default_pretrained = "eccv16_pretrained.pth"
+use_default_pretrained = True
+freeze_default_pretrained = True
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 q_ab = np.load("data/pts_in_hull.npy")
 mat = scipy.io.loadmat('human_colormap.mat')
@@ -19,15 +22,20 @@ color_map = (mat['colormap'] * 256).astype(np.int32)
 
 # Load the color prior factor that encourages rare colors
 prior_factor = torch.from_numpy(np.load("data/prior_factor.npy")).to(device)
-weights = prior_factor.unsqueeze(0).unsqueeze(-1).unsqueeze(-1)
+weights_1 = prior_factor.unsqueeze(0).unsqueeze(-1).unsqueeze(-1)
+
+prior_probs = torch.from_numpy(np.load("data/prior_prob.npy")).to(device)
+weights_2 = 1 / (0.5 * prior_probs + 0.5 / 313)
+weights_2 = weights_2 / sum(prior_probs * weights_2)
 
 # Hyperparameters
 epochs = 100
-lr = 1e-5
-train_num_max = 4000
-val_num_max = 400
+lr = 1e-4
+train_num_max = 2000
+val_num_max = 200
 pretrained = None
 save_dir = "exp_Zhang_Cla_Lab"
+loss_type = 1
 
 train_root = "/kaggle/input/aio-coco-stuff/train2017/train2017"
 val_root = "/kaggle/input/aio-coco-stuff/val2017/val2017"
@@ -47,7 +55,7 @@ else:
 
 # Use WanDB
 use_wandb = True 
-wandb_proj_name = "Zhang_Cla_Lab"
+wandb_proj_name = "Zhang_Cla_Lab_0411"
 wandb_config = {
     "dataset": "coco-stuff",
     "model": "Zhang_Cla_Lab",

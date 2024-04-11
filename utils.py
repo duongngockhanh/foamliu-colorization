@@ -3,17 +3,30 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from config import device, weights, q_ab, epsilon, T
+from config import device, weights_1, weights_2, q_ab, epsilon, T
 
 
-def categorical_crossentropy_color(y_pred, y_true):
+def categorical_crossentropy_color_1(y_pred, y_true):
     # multiply y_true by weights
-    y_true = y_true * weights
+    y_true = y_true * weights_1
 
     cross_ent = torch.nn.functional.cross_entropy(y_pred, y_true.argmax(dim=1))
     cross_ent = torch.mean(cross_ent)
 
     return cross_ent
+
+def categorical_crossentropy_color_2(y, gt):  
+    # calculate loss
+    loss_tmp = - gt * torch.log(y + 1e-10)
+    loss_tmp_perpix = torch.sum(loss_tmp, axis = 1)
+    max_idx_perpix = torch.argmax(gt, axis = 1) 
+    prior_perpix = weights_2[max_idx_perpix.cpu()]
+    prior_perpix = prior_perpix.clone().detach().to(device)
+
+    loss_perpix = prior_perpix * loss_tmp_perpix
+    loss = torch.sum(loss_perpix) / (y.shape[2] * y.shape[3])
+    
+    return loss
 
 def draw_str(dst, target, s):
     x, y = target

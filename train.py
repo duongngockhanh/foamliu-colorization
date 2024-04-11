@@ -10,15 +10,16 @@ import torch
 import torch.nn as nn
 
 from data_generator import create_dataloader
-from utils import categorical_crossentropy_color, merge_lab
+from utils import categorical_crossentropy_color_1, categorical_crossentropy_color_2, merge_lab
 from model import Zhang_Cla_Lab
 from config import (train_root, val_root,
-                    device, epochs, lr, 
+                    device, epochs, lr, loss_type,
                     train_batch_size, val_batch_size,
                     train_num_max, val_num_max, 
                     pretrained, saved_weight_path, 
-                    use_wandb, wandb_proj_name, wandb_config)
-
+                    use_wandb, wandb_proj_name, wandb_config,
+                    default_pretrained, use_default_pretrained, freeze_default_pretrained)
+from down_pretrained import download_pretrained
 
 def show_image_wandb(val_loader, model, val_batch_size, device, epoch):
     model.eval()
@@ -131,8 +132,27 @@ def main():
     val_loader = create_dataloader(val_root, batch_size=val_batch_size, shuffle=False)
 
     model = Zhang_Cla_Lab().to(device)
-    criterion = categorical_crossentropy_color
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+
+    if use_default_pretrained:
+        if not os.path.exists(default_pretrained):
+            download_pretrained()
+        pretrained_model_state_dict = torch.load(default_pretrained)
+        for name, param in model.named_parameters():
+            if name in pretrained_model_state_dict:
+                param.data = pretrained_model_state_dict[name].data
+
+        if freeze_default_pretrained:
+            for name, param in model.named_parameters():
+                if name in pretrained_model_state_dict:
+                    param.requires_grad = False
+    if loss_type == 1:
+        criterion = categorical_crossentropy_color_1
+    elif loss_type == 2:
+        criterion = categorical_crossentropy_color_2
+    optimizer = torch.optim.Adam(model.parameters(), 
+                                 lr=lr, 
+                                 betas = (0.9, 0.99), 
+                                 weight_decay = 1e-3)
 
     if pretrained != None:
         print(f"Load model from {pretrained}")

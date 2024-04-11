@@ -37,8 +37,8 @@ pretrained = None
 save_dir = "exp_Zhang_Cla_Lab"
 loss_type = 1
 
-train_root = "/kaggle/input/aio-coco-stuff/val2017/val2017"
-val_root = "/kaggle/input/aio-coco-stuff/val2017/val2017"
+train_root = "/kaggle/input/small-coco-stuff/small-coco-stuff/train2017/train2017"
+val_root = "/kaggle/input/small-coco-stuff/small-coco-stuff/train2017/train2017"
 train_batch_size = 32
 val_batch_size = 8
 
